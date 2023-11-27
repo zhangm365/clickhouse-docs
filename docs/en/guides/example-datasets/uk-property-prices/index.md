@@ -1,7 +1,6 @@
 ---
+title: "UK property prices"
 slug: /en/getting-started/example-datasets/uk-price-paid
-sidebar_label: UK Property Prices
-sidebar_position: 1
 ---
 
 # The UK property prices dataset

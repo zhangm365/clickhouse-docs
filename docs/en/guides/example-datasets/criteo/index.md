@@ -1,9 +1,7 @@
 ---
+title: "Criteo"
 slug: /en/getting-started/example-datasets/criteo
-sidebar_label: Terabyte Click Logs from Criteo
 ---
-
-# Terabyte of Click Logs from Criteo
 
 Download the data from http://labs.criteo.com/downloads/download-terabyte-click-logs/
 

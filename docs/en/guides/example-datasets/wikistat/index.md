@@ -1,5 +1,5 @@
 ---
-sidebar_label: WikiStat
+title: "WikiStat"
 ---
 
 # WikiStat

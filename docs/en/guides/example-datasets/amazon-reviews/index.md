@@ -1,6 +1,6 @@
 ---
+title: "Amazon reviews"
 slug: /en/getting-started/example-datasets/amazon-reviews
-sidebar_label: Amazon customer reviews
 ---
 
 # Amazon customer reviews dataset

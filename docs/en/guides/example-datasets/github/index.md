@@ -1,8 +1,7 @@
 ---
+title: "Github"
+description: "Analyze the ClickHouse GitHub repo or any repository of your choosing."
 slug: /en/getting-started/example-datasets/github
-sidebar_label: Github Repo
-sidebar_position: 1
-description: Analyze the ClickHouse GitHub repo or any repository of your choosing
 ---
 
 # Writing Queries in ClickHouse using GitHub Data
@@ -569,11 +568,11 @@ This data visualizes well. Below we use Superset.
 
 **For lines added and deleted:**
 
-![](./images/superset-github-lines-added-deleted.png)
+![](./superset-github-lines-added-deleted.png)
 
 **For commits and authors:**
 
-![](./images/superset-commits-authors.png)
+![](./superset-commits-authors.png)
 
 ## List files with maximum number of authors
 
@@ -1315,12 +1314,12 @@ LIMIT 100
 A Sankey chart (SuperSet) allows this to be visualized nicely. Note we increase our `LIMIT BY` to 3, to get the top 3 code removers for each author, to improve the variety in the visual.
 
 
-![](./images/superset-authors-matrix.png)
+![](./superset-authors-matrix.png)
 
 
 Alexey clearly likes removing other peoples code. Lets exclude him for a more balanced view of code removal.
 
-![](./images/superset-authors-matrix_v2.png)
+![](./superset-authors-matrix_v2.png)
 
 ## Who is the highest percentage contributor per day of week?
 

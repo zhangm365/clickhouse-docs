@@ -1,9 +1,9 @@
 ---
+title: "COVID-19"
 slug: /en/getting-started/example-datasets/covid19
-sidebar_label: COVID-19 Open-Data
 ---
 
-# COVID-19 Open-Data
+# COVID-19
 
 COVID-19 Open-Data attempts to assemble the largest Covid-19 epidemiological database, in addition to a powerful set of expansive covariates. It includes open, publicly sourced, licensed data relating to demographics, economy, epidemiology, geography, health, hospitalizations, mobility, government response, weather, and more.
 

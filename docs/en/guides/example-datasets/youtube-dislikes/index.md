@@ -1,7 +1,7 @@
 ---
+sidebar_label: "YouTube dislikes"
+description: "A collection is dislikes of YouTube videos."
 slug: /en/getting-started/example-datasets/youtube-dislikes
-sidebar_label: YouTube Dislikes
-description: A collection is dislikes of YouTube videos.
 ---
 
 # YouTube dataset of dislikes

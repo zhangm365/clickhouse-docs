@@ -1,6 +1,6 @@
 ---
+title: "Reddit comments"
 slug: /en/getting-started/example-datasets/reddit-comments
-sidebar_label: Reddit comments
 ---
 
 # Reddit comments dataset

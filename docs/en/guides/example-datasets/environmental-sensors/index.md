@@ -1,9 +1,9 @@
 ---
+title: "Environmental sensors"
 slug: /en/getting-started/example-datasets/environmental-sensors
-sidebar_label: Environmental Sensors Data
 ---
 
-# Environmental Sensors Data
+# Environmental sensors 
 
 [Sensor.Community](https://sensor.community/en/) is a contributors-driven global sensor network that creates Open Environmental Data. The data is collected from sensors all over the globe. Anyone can purchase a sensor and place it wherever they like. The APIs to download the data is in [GitHub](https://github.com/opendata-stuttgart/meta/wiki/APIs) and the data is freely available under the [Database Contents License (DbCL)](https://opendatacommons.org/licenses/dbcl/1-0/).
 
@@ -153,7 +153,7 @@ ORDER BY date ASC;
 
 We can create a chart in the SQL Console to visualize the results:
 
-![Number of events per day](./images/sensors_01.png)
+![Number of events per day](./sensors_01.png)
 
 6. This query counts the number of overly hot and humid days:
 
@@ -168,5 +168,5 @@ ORDER BY day asc;
 
 Here's a visualization of the result:
 
-![Hot and humid days](./images/sensors_02.png)
+![Hot and humid days](./sensors_02.png)
 

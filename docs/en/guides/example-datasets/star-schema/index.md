@@ -1,12 +1,10 @@
 ---
+title: "Star schema"
+description:  "Dataset based on the TPC-H dbgen source. The coding style and architecture follows the TPCH dbgen."
 slug: /en/getting-started/example-datasets/star-schema
-sidebar_label: Star Schema Benchmark
-description:  "Dataset based on the TPC-H dbgen source. The coding style and architecture
-follows the TPCH dbgen."
 ---
 
 # Star Schema Benchmark 
-
 
 Compiling dbgen:
 
