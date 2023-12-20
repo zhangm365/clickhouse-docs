@@ -1,7 +1,7 @@
 ---
-slug: /en/getting-started/quick-start
-sidebar_label: Quick Start
+title: "Quick Start"
 sidebar_position: 1
+slug: /en/getting-started/quick-start
 keywords: [clickhouse, install, getting started, quick start]
 pagination_next: 'en/getting-started/index'
 ---
@@ -10,54 +10,104 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import CodeBlock from '@theme/CodeBlock';
 
-# ClickHouse Quick Start
+# Quick Start
 
 :::tip
-This page helps you set up open-source ClickHouse on your own machine. The fastest way to deploy ClickHouse and to get access to our exclusive SQL Console is to use ClickHouse Cloud.
+This page helps you set up open-source ClickHouse on your local machine. The fastest way to deploy ClickHouse and to get access to our exclusive SQL Console is to use ClickHouse Cloud.
 
 New users get $300 in free trial credits. Click [here](https://clickhouse.cloud/signUp?loc=docs-quick-start) to sign up.
 :::
 
 ##  1: Download the binary
 
-ClickHouse runs natively on Linux, FreeBSD and macOS, and runs on Windows via the [WSL](https://learn.microsoft.com/en-us/windows/wsl/about).
-The simplest way to download ClickHouse locally is to run the following `curl` command. It determines if your operating system is supported,
-then downloads an appropriate ClickHouse binary:
+ClickHouse runs natively on Linux, FreeBSD, and MacOS. I can also run on Windows using the [Windows sub-subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/about). The simplest way to download ClickHouse locally is to run the following `curl` command. It determines if your operating system is supported, then downloads the appropriate ClickHouse binary:
 
-  ```bash
-  curl https://clickhouse.com/ | sh
-  ```
+First, make a new directory for your local ClickHouse installation to live and move into it:
 
+```shell
+mkdir ~/ClickHouse
+cd ~/ClickHouse
+```
 
+Download and run the ClickHouse install script:
+
+```shell
+curl https://clickhouse.com/ | sh
+```
+
+This command should output something like:
+
+```response
+Will download https://builds.clickhouse.com/master/macos-aarch64/clickhouse into clickhouse
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 66.8M  100 66.8M    0     0  24.5M      0  0:00:02  0:00:02 --:--:-- 24.5M
+
+Successfully downloaded the ClickHouse binary, you can run it as:
+    ./clickhouse
+```
+
+Using the `ls` command, you should be able to see a `clickhouse` executable in the current directory:
+
+```shell
+ls -l
+```
+
+```response
+...
+-rwxr-xr-x@ 1 user	staff  386329680 20 Dec 13:45 clickhouse
+...
+```
 
 ## 2: Start the server
 
 Run the following command to start the ClickHouse server:
-  ```bash
-  ./clickhouse server
-  ```
 
+```bash
+./clickhouse server
+```
 
+This command will start a local ClickHouse server output logs to your terminal window:
+
+```response
+Processing configuration file 'config.xml'.
+There is no file 'config.xml', will use embedded config.
+2023.12.20 13:45:46.091894 [ 289795 ] {} <Information> Application: starting up
+...
+```
+
+The `clickhouse server` command will continue to run in this window.
 
 ## 3: Start the client
 
-Use the `clickhouse-client` to connect to your ClickHouse service. Open a new Terminal, change directories to where your `clickhouse`
-binary is saved, and run the following command:
+The `clickhouse client` command lets you connect to your ClickHouse server. Since the `server` command is still running, open a new terminal window and change directories to where your `clickhouse` binary is located:
 
-```bash
+```shell
+cd ~/ClickHouse
+```
+
+Next, run the `client` command:
+
+```shell
 ./clickhouse client
 ```
 
-You should see a smiling face as it connects to your service running on localhost:
+```response
+ClickHouse client version 23.12.1.989 (official build).
+Connecting to localhost:9000 as user default.
+Connected to ClickHouse server version 23.12.1.
 
-  ```response
-  my-host :)
-  ```
+computer.local :)
+```
+
+This is the SQL interface within ClickHouse. You can submit SQL queries through this interface to interact with your ClickHouse databases. You will see the name of your computer rather than `computer.local`.
 
 ## 4: Create a table
 
-Use `CREATE TABLE` to define a new table. Typical SQL DDL commands work in ClickHouse with one addition - tables in ClickHouse require
-an `ENGINE` clause. Use `MergeTree` to take advantage of the performance benefits of ClickHouse:
+Use the `CREATE TABLE` command to define a new table. Typical SQL data definition language (DDL) commands work in ClickHouse with one addition - tables in ClickHouse require an `ENGINE` clause. 
+
+Table engines determine how and where data is stored, where to write data, and where to read data from. Each table engine in ClickHouse has its features, benefits, and limitations, and is designed for specific use cases.
 
 ```sql
 CREATE TABLE my_first_table
@@ -71,11 +121,43 @@ ENGINE = MergeTree
 PRIMARY KEY (user_id, timestamp)
 ```
 
+After every command, ClickHouse responds with some information. First is a summary of the command you sent to ClickHouse:
+
+```response
+CREATE TABLE my_first_table
+(
+    `user_id` UInt32,
+    `message` String,
+    `timestamp` DateTime,
+    `metric` Float32
+)
+ENGINE = MergeTree
+PRIMARY KEY (user_id, timestamp)
+```
+
+Next is a query ID that you can use to resubmit commands later on:
+
+```response
+Query id: 5f13b6ce-7851-408f-99e1-9eb67ad899ef
+```
+
+The status of the command. `Ok` means the command ran successfully, whereas `Error` implies that something went wrong:
+
+```response
+Ok.
+```
+
+Finally, ClickHouse outputs some stats about how many rows it changed and how long the process took:
+
+```response
+0 rows in set. Elapsed: 0.007 sec.
+```
+
 ## 5. Insert data
 
-You can use the familiar `INSERT INTO TABLE` command with ClickHouse, but it is important to understand that each insert into a
-`MergeTree` table causes a **part** (folder) to be created in storage. To minimize parts, bulk insert lots of rows at a time (tens of
-thousands or even millions at once).
+You can use the familiar `INSERT INTO TABLE` command with ClickHouse, but it is essential to understand that each insert into a `MergeTree` table causes a _part_ to be created in storage. A _part_ is a physical file on a disk that stores a portion of the table's data. To minimize parts, you can bulk insert lots of rows at a time.
+
+For now, we're going to insert just a few rows:
 
 ```sql
 INSERT INTO my_first_table (user_id, message, timestamp, metric) VALUES
@@ -85,38 +167,47 @@ INSERT INTO my_first_table (user_id, message, timestamp, metric) VALUES
     (101, 'Granules are the smallest chunks of data read',      now() + 5,   3.14159 )
 ```
 
+```response
+INSERT INTO my_first_table (user_id, message, timestamp, metric) FORMAT Values
+
+Query id: 9a1c9149-2923-4547-af37-e56ee5a1d315
+
+Ok.
+
+4 rows in set. Elapsed: 0.045 sec.
+```
+
 ## 6. Query your new table
 
-You can write a `SELECT` query just like you would with any SQL database:
+Now that you have some data in your database, you can write a `SELECT` query just like you would with any SQL database:
 
- ```sql
-  SELECT *
-  FROM my_first_table
-  ORDER BY timestamp
-  ```
-  Notice the response comes back in a nice table format:
-   ```response
-   ┌─user_id─┬─message────────────────────────────────────────────┬───────────timestamp─┬──metric─┐
-   │     102 │ Insert a lot of rows per batch                     │ 2022-03-21 00:00:00 │ 1.41421 │
-   │     102 │ Sort your data based on your commonly-used queries │ 2022-03-22 00:00:00 │   2.718 │
-   │     101 │ Hello, ClickHouse!                                 │ 2022-03-22 14:04:09 │      -1 │
-   │     101 │ Granules are the smallest chunks of data read      │ 2022-03-22 14:04:14 │ 3.14159 │
-   └─────────┴────────────────────────────────────────────────────┴─────────────────────┴─────────┘
+```sql
+SELECT *
+FROM my_first_table
+ORDER BY timestamp
+```
 
-   4 rows in set. Elapsed: 0.008 sec.
-   ```
+ClickHouse formats that response in an easy-to-read table:
 
-## 7: Insert your own data
+```response
+┌─user_id─┬─message────────────────────────────────────────────┬───────────timestamp─┬──metric─┐
+│     102 │ Insert a lot of rows per batch                     │ 2022-03-21 00:00:00 │ 1.41421 │
+│     102 │ Sort your data based on your commonly-used queries │ 2022-03-22 00:00:00 │   2.718 │
+│     101 │ Hello, ClickHouse!                                 │ 2022-03-22 14:04:09 │      -1 │
+│     101 │ Granules are the smallest chunks of data read      │ 2022-03-22 14:04:14 │ 3.14159 │
+└─────────┴────────────────────────────────────────────────────┴─────────────────────┴─────────┘
 
-The next step is to get your current data into ClickHouse. We have lots of [table functions](/docs/en/sql-reference/table-functions/index.md)
-and [integrations](/docs/en/integrations) for ingesting data. We have some examples in the tabs below, or check out our [Integrations](/docs/en/integrations)
-for a long list of technologies that integrate with ClickHouse.
+4 rows in set. Elapsed: 0.008 sec.
+```
+
+## 7: Insert your data
+
+The next step is to get your current data into ClickHouse. There are lots of table functions and integrations for ingesting data, a few of which we've listed here: 
 
 <Tabs groupId="read_data">
 <TabItem value="S3" label="S3" default>
 
-Use the [`s3` table function](/docs/en/sql-reference/table-functions/s3.md) to read files from S3. It's a table function - meaning that the
-result is a table that can be:
+Use the [`s3` table function](/docs/en/sql-reference/table-functions/s3.md) to read files from S3. It's a table function - meaning that the result is a table that can be:
 
 1. used as the source of a `SELECT` query (allowing you to run ad-hoc queries and leave your data in S3), or...
 2. insert the resulting table into a `MergeTree` table (when you are ready to move your data into ClickHouse)
@@ -146,7 +237,7 @@ INSERT INTO nyc_taxi
 SETTINGS input_format_allow_errors_num=25000;
 ```
 
-View our [collection of AWS S3 documentation pages](/docs/en/integrations/data-ingestion/s3/index.md) for lots more details and examples of using S3 with ClickHouse.
+View our [collection of AWS S3 documentation pages](/docs/en/integrations/data-ingestion/s3/index.md) for more details and examples of using S3 with ClickHouse.
 
 </TabItem>
 <TabItem value="GCS" label="GCS">
@@ -207,8 +298,7 @@ Query id: 8ca9b2f9-65a2-4982-954a-890de710a336
 └───────────┴─────────────────────────┴──────────────┴────────────────────┴─────────┴──────────────────┴────────────────┘
 ```
 
-Notice ClickHouse infers the names and data types of your columns by analyzing a large batch of rows.
-If ClickHouse can not determine the storage type from the filename, you can specify it as the second argument:
+Notice that ClickHouse infers your columns' names and data types by analyzing a large batch of rows. If ClickHouse can not determine the storage type from the filename, you can specify it as the second argument:
 
 ```sql
 SELECT count()
@@ -218,7 +308,7 @@ FROM file(
 )
 ```
 
-View the [`file` table function](/docs/en/sql-reference/table-functions/file) docs page for more details.
+For more details, view the [`file` table function](/docs/en/sql-reference/table-functions/file) docs page.
 
 </TabItem>
 <TabItem value="PostgreSQL" label="PostgreSQL">
@@ -238,7 +328,7 @@ FROM
 ;
 ```
 
-View the [`postgresql` table function](/docs/en/sql-reference/table-functions/postgresql) docs page for more details.
+For more details, view the [`postgresql` table function](/docs/en/sql-reference/table-functions/postgresql) docs page.
 
 </TabItem>
 <TabItem value="MySQL" label="MySQL">
@@ -258,7 +348,7 @@ FROM
 ;
 ```
 
-View the [`mysql` table function](/docs/en/sql-reference/table-functions/mysql) docs page for more details.
+For more details, view the [mysql` table function](/docs/en/sql-reference/table-functions/mysql) docs page.
 
 
 </TabItem>
@@ -300,16 +390,18 @@ ClickHouse has table functions to read data from the following sources:
 </TabItem>
 <TabItem value="Other" label="Other">
 
-Check out our [long list of ClickHouse integrations](/docs/en/integrations) to find how to connect your existing frameworks and data sources to ClickHouse.
+Check out our [long list of ClickHouse integrations](/docs/en/integrations) to find out how to connect your existing frameworks and data sources to ClickHouse.
 
 </TabItem>
 </Tabs>
 
 ## What's Next?
 
-- Check out the [Advanced Tutorial](tutorial.md) which takes a much deeper dive into the key concepts and capabilities of ClickHouse
-- Continue your learning by taking our free on-demand training courses at the [ClickHouse Academy](https://learn.clickhouse.com/visitor_class_catalog)
-- We have a list of [example datasets](/docs/en/getting-started/example-datasets/) with instructions on how to insert them
-- If your data is coming from an external source, view our [collection of integration guides](/docs/en/integrations/) for connecting to message queues, databases, pipelines and more
-- If you are using a UI/BI visualization tool, view the [user guides for connecting a UI to ClickHouse](/docs/en/integrations/data-visualization/)
+Now that you've installed ClickHouse locally, created a table, and ingested some data, you can move on to more advanced steps.
+
+- Check out the [Advanced Tutorial](tutorial.md), which takes a much deeper dive into the key concepts and capabilities of ClickHouse.
+- Continue learning by taking our free on-demand training courses at the [ClickHouse Academy](https://learn.clickhouse.com/visitor_class_catalog).
+- Take a look at the [example datasets](/docs/en/getting-started/example-datasets/) with instructions on how to insert them.
+- View our [collection of integration guides](/docs/en/integrations/) for connecting to message queues, databases, pipelines, and more.
+- If you are using a UI/BI visualization tool, view the [user guides for connecting a UI to ClickHouse](/docs/en/integrations/data-visualization/).
 - The user guide on [primary keys](/docs/en/guides/best-practices/sparse-primary-indexes.md) is everything you need to know about primary keys and how to define them
